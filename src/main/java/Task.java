@@ -17,11 +17,17 @@ public class Task {
     public void setDone(boolean done) {
         isDone = done;
     }
+
     public Task(String description) {
         this.description = description;
         isDone = false;
     }
+
     public String getStatusIcon() {
         return (isDone ? "\u2713" : "\u2718");
+    }
+
+    public String toString(){
+        return "["+getStatusIcon()+"] "+description;
     }
 }
