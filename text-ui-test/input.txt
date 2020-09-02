@@ -1,0 +1,13 @@
+list
+deAdLine do homework /by next thursday
+event new atapon /at next Sat
+toDo your mom
+list
+done 0
+done 2
+list
+deadline submit report /by next MoN
+list
+done 4
+list
+bye
