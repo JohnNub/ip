@@ -27,7 +27,8 @@ public class Task {
         return (isDone ? "\u2713" : "\u2718");
     }
 
-    public String toString(){
-        return "["+getStatusIcon()+"] "+description;
+    @Override
+    public String toString() {
+        return "[" + getStatusIcon() + "] " + description;
     }
 }
