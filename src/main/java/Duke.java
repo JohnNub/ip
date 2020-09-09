@@ -3,9 +3,10 @@ import java.util.Scanner;
 
 
 public class Duke {
+    static ArrayList<Task> taskList = new ArrayList<Task>();
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        ArrayList<Task> taskList = new ArrayList<Task>();
+
         String userInput;
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
@@ -20,66 +21,79 @@ public class Duke {
             if (userInput.equalsIgnoreCase("bye")) {
                 break;
             } else if (userInput.equalsIgnoreCase("list")) {
-                if (taskList.size() == 0) {
-                    printOutput("Oops the list is empty!", false);
-                    continue;
-                }
-                String tl = "";
-                for (int i = 0; i < taskList.size(); i++) {
-                    Task t = taskList.get(i);
-                    tl += (i + 1) + ". " + t.toString() + System.lineSeparator();
-                }
-                printOutput(tl, false);
+                listTasks(userInput);
             } else if (userInput.toLowerCase().startsWith("done ")) {
-                String taskStr = userInput.substring(4).strip();
-                try {
-                    Task t = taskList.get(Integer.parseInt(taskStr) - 1);
-                    t.setDone(true);
-                    printOutput("Nice! I've marked this task as done:\n\t" + t.toString(), false);
-                } catch (Exception e) {
-                    printOutput("Oops! That didn't work, please check your input and try again!", true);
-                }
+                setDone(userInput);
             } else if (userInput.toLowerCase().startsWith("deadline")) {
-                if (!userInput.toLowerCase().contains("/by")) {
-                    printOutput("usage: deadline <name of item> /by <dd-MMM-yyyy HH:mm:ss OR next [weekday]>", true);
-                    continue;
-                }
-                String[] taskArgs = userInput.substring(8).strip().split("/by");
-
-                Deadline d = new Deadline(taskArgs[0].strip(), taskArgs[1].strip());
-                if (d.getDue() == null) {
-                    printOutput("Unable to parse date! Please try again.", true);
-                    continue;
-                }
-                taskList.add(d);
-                printOutput("Added new deadline: " + taskArgs[0] + System.lineSeparator() + "\tDue by: " + d.getDue());
+                createDeadline(userInput);
             } else if (userInput.toLowerCase().startsWith("event")) {
-                if (!userInput.toLowerCase().contains("/at")) {
-                    printOutput("usage: event <name of item> /at <dd-MMM-yyyy HH:mm:ss OR next [weekday]>", true);
-                    continue;
-                }
-                String[] taskArgs = userInput.substring(5).strip().split("/at");
-
-                Event e = new Event(taskArgs[0].strip(), taskArgs[1].strip());
-                if (e.getStart() == null) {
-                    printOutput("Unable to parse date! Please try again.", true);
-                    continue;
-                }
-                taskList.add(e);
-                printOutput("Added new event: " + taskArgs[0] + System.lineSeparator() + "\tStart at: " + e.getStart());
+                createEvent(userInput);
             } else if (userInput.toLowerCase().startsWith("todo")) {
-                String taskString = userInput.substring(4).strip();
-                ToDo t = new ToDo(taskString);
-                taskList.add(t);
-                printOutput("Added new todo: " + t.toString());
+                createTodo(userInput);
             } else {
                 printOutput("Commands: bye list todo deadline event", false);
             }
         }
         printOutput("Bye. Hope to see you again soon!", true);
     }
+    private static void listTasks(String userInput){
+        if (taskList.size() == 0) {
+            printOutput("Oops the list is empty!", false);
+            return;
+        }
+        String tl = "";
+        for (int i = 0; i < taskList.size(); i++) {
+            Task t = taskList.get(i);
+            tl += (i + 1) + ". " + t.toString() + System.lineSeparator();
+        }
+        printOutput(tl, false);
+    }
+    private static void setDone(String userInput){
+        String taskStr = userInput.substring(4).strip();
+        try {
+            Task t = taskList.get(Integer.parseInt(taskStr) - 1);
+            t.setDone(true);
+            printOutput("Nice! I've marked this task as done:\n\t" + t.toString(), false);
+        } catch (Exception e) {
+            printOutput("Oops! That didn't work, please check your input and try again!", true);
+        }
+    }
+    private static void createDeadline(String userInput){
+        if (!userInput.toLowerCase().contains("/by")) {
+            printOutput("usage: deadline <name of item> /by <dd-MMM-yyyy HH:mm:ss OR next [weekday]>", true);
+            return;
+        }
+        String[] taskArgs = userInput.substring(8).strip().split("/by");
 
+        Deadline d = new Deadline(taskArgs[0].strip(), taskArgs[1].strip());
+        if (d.getDue() == null) {
+            printOutput("Unable to parse date! Please try again.", true);
+            return;
+        }
+        taskList.add(d);
+        printOutput("Added new deadline: " + taskArgs[0] + System.lineSeparator() + "\tDue by: " + d.getDue());
+    }
+    private static void createTodo(String userInput){
+        String taskString = userInput.substring(4).strip();
+        ToDo t = new ToDo(taskString);
+        taskList.add(t);
+        printOutput("Added new todo: " + t.toString());
+    }
+    private static void createEvent(String userInput){
+        if (!userInput.toLowerCase().contains("/at")) {
+            printOutput("usage: event <name of item> /at <dd-MMM-yyyy HH:mm:ss OR next [weekday]>", true);
+            return;
+        }
+        String[] taskArgs = userInput.substring(5).strip().split("/at");
 
+        Event e = new Event(taskArgs[0].strip(), taskArgs[1].strip());
+        if (e.getStart() == null) {
+            printOutput("Unable to parse date! Please try again.", true);
+            return;
+        }
+        taskList.add(e);
+        printOutput("Added new event: " + taskArgs[0] + System.lineSeparator() + "\tStart at: " + e.getStart());
+    }
     private static void printOutput(String text) {
         printOutput(text, false);
     }

@@ -10,7 +10,7 @@ import static java.time.temporal.TemporalAdjusters.next;
 
 public class Deadline extends Task {
     private LocalDateTime due;
-    private static DateTimeFormatter FORMAT_LIST[] = {
+    private static final DateTimeFormatter FORMAT_LIST[] = {
             DateTimeFormatter.ofPattern("dd/MM/yyyy"),
             DateTimeFormatter.ofPattern("dd-MMM-yyyy"),
             DateTimeFormatter.ofPattern("MM dd, yyyy"),
