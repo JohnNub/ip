@@ -1,15 +1,16 @@
-import java.text.ParseException;
+package duke.tasks;
+
+import duke.main.DukeException;
+
 import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static java.time.temporal.TemporalAdjusters.next;
 
-public class Deadline extends Task {
-    private LocalDateTime due;
+public class Event extends Task {
+    private LocalDateTime start;
+    private LocalDateTime end;
     private static final DateTimeFormatter FORMAT_LIST[] = {
             DateTimeFormatter.ofPattern("dd/MM/yyyy"),
             DateTimeFormatter.ofPattern("dd-MMM-yyyy"),
@@ -20,16 +21,18 @@ public class Deadline extends Task {
             DateTimeFormatter.ofPattern("dd-MMM-yy")
     };
 
-    public Deadline(String s, String deadline) {
+    public Event(String s, String startStr) throws DukeException {
         super(s);
-        tryReadDate(deadline);
+        tryReadDate(startStr);
+        end = start;
     }
 
     /**
      * tryReadDate - Attempts to convert the user supplied date string to a machine date
+     * TODO implement end time
      * @param dateStr The string to be converted
      */
-    private void tryReadDate(String dateStr) {
+    private void tryReadDate(String dateStr) throws DukeException {
         LocalDateTime result = null;
         for (DateTimeFormatter dtf : FORMAT_LIST) {
             try {
@@ -38,7 +41,7 @@ public class Deadline extends Task {
                 continue;
             }
             if (result != null) {
-                this.due = result;
+                this.start = result;
                 return;
             }
         }
@@ -46,33 +49,44 @@ public class Deadline extends Task {
         LocalDateTime now = LocalDateTime.now();
         if (dateStr.toLowerCase().contains("next")) {
             if (dateStr.toLowerCase().matches("next\\s*mon.*")) {
-                this.due = LocalDateTime.now().with(next(DayOfWeek.MONDAY));
+                this.start = LocalDateTime.now().with(next(DayOfWeek.MONDAY));
             } else if (dateStr.toLowerCase().matches("next\\s*tue.*")) {
-                this.due = LocalDateTime.now().with(next(DayOfWeek.TUESDAY));
+                this.start = LocalDateTime.now().with(next(DayOfWeek.TUESDAY));
             } else if (dateStr.toLowerCase().matches("next\\s*wed.*")) {
-                this.due = LocalDateTime.now().with(next(DayOfWeek.WEDNESDAY));
+                this.start = LocalDateTime.now().with(next(DayOfWeek.WEDNESDAY));
             } else if (dateStr.toLowerCase().matches("next\\s*thu.*")) {
-                this.due = LocalDateTime.now().with(next(DayOfWeek.THURSDAY));
+                this.start = LocalDateTime.now().with(next(DayOfWeek.THURSDAY));
             } else if (dateStr.toLowerCase().matches("next\\s*fri.*")) {
-                this.due = LocalDateTime.now().with(next(DayOfWeek.FRIDAY));
+                this.start = LocalDateTime.now().with(next(DayOfWeek.FRIDAY));
             } else if (dateStr.toLowerCase().matches("next\\s*sat.*")) {
-                this.due = LocalDateTime.now().with(next(DayOfWeek.SATURDAY));
+                this.start = LocalDateTime.now().with(next(DayOfWeek.SATURDAY));
             } else if (dateStr.toLowerCase().matches("next\\s*sun.*")) {
-                this.due = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
+                this.start = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
             }
         }
-    }
-
-    public LocalDateTime getDue() {
-        return due;
-    }
-
-    public void setDue(LocalDateTime due) {
-        this.due = due;
+        if (this.start == null) {
+            throw new DukeException();
+        }
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " Due: " + due;
+        return "[E]" + super.toString() + " Starts: " + start;
+    }
+
+    public LocalDateTime getStart() {
+        return start;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 }

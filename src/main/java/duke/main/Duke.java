@@ -1,9 +1,17 @@
+package duke.main;
+
+import duke.tasks.Deadline;
+import duke.tasks.Event;
+import duke.tasks.Task;
+import duke.tasks.ToDo;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 
 public class Duke {
     static ArrayList<Task> taskList = new ArrayList<Task>();
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
@@ -14,7 +22,7 @@ public class Duke {
                 + "| |_| | |_| |   <  __/\n"
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Hello from\n" + logo);
-        printOutput("Hello! I'm Duke\n" +
+        printOutput("Hello! I'm duke.main.Duke\n" +
                 "What can I do for you?", true);
         while (true) {
             userInput = in.nextLine();
@@ -36,7 +44,8 @@ public class Duke {
         }
         printOutput("Bye. Hope to see you again soon!", true);
     }
-    private static void listTasks(String userInput){
+
+    private static void listTasks(String userInput) {
         if (taskList.size() == 0) {
             printOutput("Oops the list is empty!", false);
             return;
@@ -48,52 +57,61 @@ public class Duke {
         }
         printOutput(tl, false);
     }
-    private static void setDone(String userInput){
-        String taskStr = userInput.substring(4).strip();
+
+    private static void setDone(String userInput) {
         try {
+            String taskStr = userInput.substring(4).strip();
             Task t = taskList.get(Integer.parseInt(taskStr) - 1);
             t.setDone(true);
             printOutput("Nice! I've marked this task as done:\n\t" + t.toString(), false);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            printOutput("Oops! Please enter a number for the task!", true);
+        } catch (IndexOutOfBoundsException e){
+            printOutput("Oops! We couldn't find that entry in the list!", true);
+        } catch (Exception e){
             printOutput("Oops! That didn't work, please check your input and try again!", true);
         }
     }
-    private static void createDeadline(String userInput){
+
+    private static void createDeadline(String userInput) {
         if (!userInput.toLowerCase().contains("/by")) {
             printOutput("usage: deadline <name of item> /by <dd-MMM-yyyy HH:mm:ss OR next [weekday]>", true);
             return;
         }
         String[] taskArgs = userInput.substring(8).strip().split("/by");
-
-        Deadline d = new Deadline(taskArgs[0].strip(), taskArgs[1].strip());
-        if (d.getDue() == null) {
+        try {
+            Deadline d = new Deadline(taskArgs[0].strip(), taskArgs[1].strip());
+            taskList.add(d);
+            printOutput("Added new deadline: " + taskArgs[0] + System.lineSeparator() + "\tDue by: " + d.getDue());
+        } catch (DukeException de) {
             printOutput("Unable to parse date! Please try again.", true);
             return;
         }
-        taskList.add(d);
-        printOutput("Added new deadline: " + taskArgs[0] + System.lineSeparator() + "\tDue by: " + d.getDue());
     }
-    private static void createTodo(String userInput){
+
+    private static void createTodo(String userInput) {
         String taskString = userInput.substring(4).strip();
         ToDo t = new ToDo(taskString);
         taskList.add(t);
         printOutput("Added new todo: " + t.toString());
     }
-    private static void createEvent(String userInput){
+
+    private static void createEvent(String userInput) {
         if (!userInput.toLowerCase().contains("/at")) {
             printOutput("usage: event <name of item> /at <dd-MMM-yyyy HH:mm:ss OR next [weekday]>", true);
             return;
         }
         String[] taskArgs = userInput.substring(5).strip().split("/at");
-
-        Event e = new Event(taskArgs[0].strip(), taskArgs[1].strip());
-        if (e.getStart() == null) {
+        try {
+            Event e = new Event(taskArgs[0].strip(), taskArgs[1].strip());
+            taskList.add(e);
+            printOutput("Added new event: " + taskArgs[0] + System.lineSeparator() + "\tStart at: " + e.getStart());
+        } catch (DukeException de) {
             printOutput("Unable to parse date! Please try again.", true);
             return;
         }
-        taskList.add(e);
-        printOutput("Added new event: " + taskArgs[0] + System.lineSeparator() + "\tStart at: " + e.getStart());
     }
+
     private static void printOutput(String text) {
         printOutput(text, false);
     }
@@ -105,7 +123,8 @@ public class Duke {
      * @param instant whether the string is printed instantly
      */
     private static void printOutput(String text, boolean instant) {
-        System.out.println("____________________________________________________________");
+        final String UNDERSCORES = "____________________________________________________________";
+        System.out.println(UNDERSCORES);
         //Split text according to the lines to format
         String[] lines = text.split("\\r?\\n");
         for (String s : lines) {
@@ -126,6 +145,6 @@ public class Duke {
                 System.out.print(System.lineSeparator());
             }
         }
-        System.out.println("____________________________________________________________");
+        System.out.println(UNDERSCORES);
     }
 }
