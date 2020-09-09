@@ -1,10 +1,6 @@
-import java.text.ParseException;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static java.time.temporal.TemporalAdjusters.next;
 
@@ -20,7 +16,7 @@ public class Deadline extends Task {
             DateTimeFormatter.ofPattern("dd-MMM-yy")
     };
 
-    public Deadline(String s, String deadline) {
+    public Deadline(String s, String deadline) throws DukeException {
         super(s);
         tryReadDate(deadline);
     }
@@ -29,7 +25,7 @@ public class Deadline extends Task {
      * tryReadDate - Attempts to convert the user supplied date string to a machine date
      * @param dateStr The string to be converted
      */
-    private void tryReadDate(String dateStr) {
+    private void tryReadDate(String dateStr) throws DukeException {
         LocalDateTime result = null;
         for (DateTimeFormatter dtf : FORMAT_LIST) {
             try {
@@ -60,6 +56,9 @@ public class Deadline extends Task {
             } else if (dateStr.toLowerCase().matches("next\\s*sun.*")) {
                 this.due = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
             }
+        }
+        if (this.due == null) {
+            throw new DukeException();
         }
     }
 

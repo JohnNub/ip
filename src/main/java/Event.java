@@ -17,7 +17,7 @@ public class Event extends Task {
             DateTimeFormatter.ofPattern("dd-MMM-yy")
     };
 
-    public Event(String s, String startStr) {
+    public Event(String s, String startStr) throws DukeException {
         super(s);
         tryReadDate(startStr);
         end = start;
@@ -28,7 +28,7 @@ public class Event extends Task {
      * TODO implement end time
      * @param dateStr The string to be converted
      */
-    private void tryReadDate(String dateStr) {
+    private void tryReadDate(String dateStr) throws DukeException {
         LocalDateTime result = null;
         for (DateTimeFormatter dtf : FORMAT_LIST) {
             try {
@@ -59,6 +59,9 @@ public class Event extends Task {
             } else if (dateStr.toLowerCase().matches("next\\s*sun.*")) {
                 this.start = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
             }
+        }
+        if (this.start == null) {
+            throw new DukeException();
         }
     }
 
