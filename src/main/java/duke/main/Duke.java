@@ -1,3 +1,10 @@
+package duke.main;
+
+import duke.tasks.Deadline;
+import duke.tasks.Event;
+import duke.tasks.Task;
+import duke.tasks.ToDo;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,7 +22,7 @@ public class Duke {
                 + "| |_| | |_| |   <  __/\n"
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Hello from\n" + logo);
-        printOutput("Hello! I'm Duke\n" +
+        printOutput("Hello! I'm duke.main.Duke\n" +
                 "What can I do for you?", true);
         while (true) {
             userInput = in.nextLine();
