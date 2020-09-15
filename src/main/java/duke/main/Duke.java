@@ -11,17 +11,17 @@ import java.util.Scanner;
 
 public class Duke {
     static ArrayList<Task> taskList = new ArrayList<Task>();
-
+    private static final String LOGO = " ____        _        \n"
+            + "|  _ \\ _   _| | _____ \n"
+            + "| | | | | | | |/ / _ \\\n"
+            + "| |_| | |_| |   <  __/\n"
+            + "|____/ \\__,_|_|\\_\\___|\n";
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
         String userInput;
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
+
+        System.out.println("Hello from\n" + LOGO);
         printOutput("Hello! I'm duke.main.Duke\n" +
                 "What can I do for you?", true);
         while (true) {
@@ -38,26 +38,36 @@ public class Duke {
                 createEvent(userInput);
             } else if (userInput.toLowerCase().startsWith("todo")) {
                 createTodo(userInput);
+            } else if(userInput.toLowerCase().startsWith("delete")){
+                deleteTask(userInput);
             } else {
-                printOutput("Commands: bye list todo deadline event", false);
+                printOutput("Commands: bye list delete todo deadline event", false);
             }
         }
         printOutput("Bye. Hope to see you again soon!", true);
     }
 
+    /**
+     * Lists all the tasks that are currently available
+     * @param userInput The string supplied by the user to be interpreted
+     */
     private static void listTasks(String userInput) {
         if (taskList.size() == 0) {
             printOutput("Oops the list is empty!", false);
             return;
         }
-        String tl = "";
+        String taskString = "";
         for (int i = 0; i < taskList.size(); i++) {
             Task t = taskList.get(i);
-            tl += (i + 1) + ". " + t.toString() + System.lineSeparator();
+            taskString += (i + 1) + ". " + t.toString() + System.lineSeparator();
         }
-        printOutput(tl, false);
+        printOutput(taskString, false);
     }
 
+    /**
+     * Marks the given task as done.
+     * @param userInput The string supplied by the user to be interpreted
+     */
     private static void setDone(String userInput) {
         try {
             String taskStr = userInput.substring(4).strip();
@@ -73,6 +83,10 @@ public class Duke {
         }
     }
 
+    /**
+     * Creates a new deadline task
+     * @param userInput The string supplied by the user to be interpreted
+     */
     private static void createDeadline(String userInput) {
         if (!userInput.toLowerCase().contains("/by")) {
             printOutput("usage: deadline <name of item> /by <dd-MMM-yyyy HH:mm:ss OR next [weekday]>", true);
@@ -89,6 +103,10 @@ public class Duke {
         }
     }
 
+    /**
+     * Creates a new ToDo task
+     * @param userInput The string supplied by the user to be interpreted
+     */
     private static void createTodo(String userInput) {
         String taskString = userInput.substring(4).strip();
         ToDo t = new ToDo(taskString);
@@ -96,6 +114,10 @@ public class Duke {
         printOutput("Added new todo: " + t.toString());
     }
 
+    /**
+     * Creates a new event
+     * @param userInput The string supplied by the user to be interpreted
+     */
     private static void createEvent(String userInput) {
         if (!userInput.toLowerCase().contains("/at")) {
             printOutput("usage: event <name of item> /at <dd-MMM-yyyy HH:mm:ss OR next [weekday]>", true);
@@ -112,6 +134,23 @@ public class Duke {
         }
     }
 
+    private static void deleteTask(String userInput) {
+        try {
+            String taskStr = userInput.substring(6).strip();
+            Task t = taskList.get(Integer.parseInt(taskStr) - 1);
+
+            t.setDone(true);
+            printOutput("Noted! I've removed this task from the list:\n\t" + t.toString(), false);
+            taskList.remove(t);
+        } catch (NumberFormatException e) {
+            printOutput("Oops! Please enter a number for the task!", true);
+        } catch (IndexOutOfBoundsException e){
+            printOutput("Oops! We couldn't find that entry in the list!", true);
+        } catch (Exception e){
+            printOutput("Oops! That didn't work, please check your input and try again!", true);
+        }
+    }
+
     private static void printOutput(String text) {
         printOutput(text, false);
     }
@@ -120,19 +159,19 @@ public class Duke {
      * Prints the output with the divider lines and the supplied text
      * Option to make the text non instant for extra effect
      * @param text string to be printed
-     * @param instant whether the string is printed instantly
+     * @param isInstant whether the string is printed instantly
      */
-    private static void printOutput(String text, boolean instant) {
+    private static void printOutput(String text, boolean isInstant) {
         final String UNDERSCORES = "____________________________________________________________";
         System.out.println(UNDERSCORES);
-        //Split text according to the lines to format
+        // Split text according to the lines to format.
         String[] lines = text.split("\\r?\\n");
         for (String s : lines) {
-            if (instant) {
+            if (isInstant) {
                 System.out.println("  " + s);
             } else {
                 System.out.print("  ");
-                //charAt is constant time lookup so we do that instead of splitting strings
+                // charAt is constant time lookup so we do that instead of splitting strings.
                 for (int i = 0; i < s.length(); i++) {
                     char c = s.charAt(i);
                     System.out.print(c);

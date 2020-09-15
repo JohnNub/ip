@@ -28,7 +28,7 @@ public class Event extends Task {
     }
 
     /**
-     * tryReadDate - Attempts to convert the user supplied date string to a machine date
+     * Attempts to convert the user supplied date string to a machine date
      * TODO implement end time
      * @param dateStr The string to be converted
      */
