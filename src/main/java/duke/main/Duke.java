@@ -5,6 +5,7 @@ import duke.tasks.Event;
 import duke.tasks.Task;
 import duke.tasks.ToDo;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,14 +17,32 @@ public class Duke {
             + "| | | | | | | |/ / _ \\\n"
             + "| |_| | |_| |   <  __/\n"
             + "|____/ \\__,_|_|\\_\\___|\n";
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
         String userInput;
 
         System.out.println("Hello from\n" + LOGO);
-        printOutput("Hello! I'm duke.main.Duke\n" +
+        printOutput("Hello! I'm Duke\n" +
                 "What can I do for you?", true);
+        // Attempt to load the saved data
+        try {
+            FileInputStream fis = new FileInputStream("data.duke");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            taskList = (ArrayList<Task>) ois.readObject();
+            ois.close();
+            fis.close();
+            printOutput("I found your saved list of tasks and successfully loaded them!", true);
+        } catch (FileNotFoundException e) {
+            printOutput("I couldn't find any previously saved data.", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            printOutput("I couldn't read your saved data! Did you give me read permissions?", true);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            printOutput("I couldn't parse your saved data! Could it be corrupted?", true);
+        }
         while (true) {
             userInput = in.nextLine();
             if (userInput.equalsIgnoreCase("bye")) {
@@ -38,11 +57,12 @@ public class Duke {
                 createEvent(userInput);
             } else if (userInput.toLowerCase().startsWith("todo")) {
                 createTodo(userInput);
-            } else if(userInput.toLowerCase().startsWith("delete")){
+            } else if (userInput.toLowerCase().startsWith("delete")) {
                 deleteTask(userInput);
             } else {
                 printOutput("Commands: bye list delete todo deadline event", false);
             }
+            writeToFile();
         }
         printOutput("Bye. Hope to see you again soon!", true);
     }
@@ -76,9 +96,9 @@ public class Duke {
             printOutput("Nice! I've marked this task as done:\n\t" + t.toString(), false);
         } catch (NumberFormatException e) {
             printOutput("Oops! Please enter a number for the task!", true);
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             printOutput("Oops! We couldn't find that entry in the list!", true);
-        } catch (Exception e){
+        } catch (Exception e) {
             printOutput("Oops! That didn't work, please check your input and try again!", true);
         }
     }
@@ -144,10 +164,25 @@ public class Duke {
             taskList.remove(t);
         } catch (NumberFormatException e) {
             printOutput("Oops! Please enter a number for the task!", true);
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             printOutput("Oops! We couldn't find that entry in the list!", true);
-        } catch (Exception e){
+        } catch (Exception e) {
             printOutput("Oops! That didn't work, please check your input and try again!", true);
+        }
+    }
+
+    private static void writeToFile() {
+        try {
+            FileOutputStream fos = new FileOutputStream("data.duke");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(taskList);
+            oos.close();
+        } catch (FileNotFoundException e) {
+            printOutput("I couldn't save your data to file! Did you give me write permissions?", true);
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+            printOutput("I couldn't perform the write operation!", true);
         }
     }
 
