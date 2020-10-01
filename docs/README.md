@@ -45,6 +45,6 @@ Example of usage:
 Expected outcome:
 
 ```____________________________________________________________
-  Added new todo: [D][✘] my deadline
+  Added new deadline: my deadline
 	Due by: 2020-09-10T13:36:29.396448400
 ____________________________________________________________```
