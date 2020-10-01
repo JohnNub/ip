@@ -25,7 +25,6 @@ public class Event extends Task {
     public Event(String s, String startStr, String endStr) throws DukeException {
         super(s);
         tryReadDate(startStr, endStr);
-        end = start;
     }
 
     /**
@@ -92,7 +91,7 @@ public class Event extends Task {
         // Parse Date2. relative timing now reflects "next weekday after start"
         for (DateTimeFormatter dtf : FORMAT_LIST) {
             try {
-                result = LocalDateTime.parse(dateStr, dtf);
+                result = LocalDateTime.parse(date2, dtf);
             } catch (Exception e) {
                 continue;
             }

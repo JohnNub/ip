@@ -56,7 +56,7 @@ public class Ui {
         } else if (userInput.getCommand().equalsIgnoreCase("find")) {
             findTask(userInput);
         } else {
-            printOutput("Commands: bye list done delete todo deadline event ", false);
+            printOutput("Commands: bye list done delete todo deadline event find", false);
         }
     }
 
@@ -197,7 +197,6 @@ public class Ui {
             String arg = userInput.getArg("");
             Task t = taskList.get(Integer.parseInt(arg) - 1);
 
-            t.setDone(true);
             printOutput("Noted! I've removed this task from the list:\n\t" + t.toString(), false);
             taskList.remove(t);
         } catch (NumberFormatException e) {
@@ -229,10 +228,14 @@ public class Ui {
         }
         String taskString = "";
         int count = 1;
-        for (Task t : taskList) {
+        for (int i = 0; i < taskList.size(); i++) {
+            Task t = taskList.get(i);
             if (t.getDescription().toLowerCase().contains(base.toLowerCase())) {
-                taskString += (count++) + ". " + t.toString() + System.lineSeparator();
+                taskString += (i + 1) + ". " + t.toString() + System.lineSeparator();
             }
+        }
+        if(taskString.equals("")){
+            taskString = "Oops! There were no tasks matching your specification!";
         }
         printOutput(taskString, false);
     }
