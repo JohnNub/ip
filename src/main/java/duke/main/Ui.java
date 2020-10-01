@@ -46,8 +46,10 @@ public class Ui {
             createTodo(userInput);
         } else if (userInput.getCommand().equalsIgnoreCase("delete")) {
             deleteTask(userInput);
+        } else if (userInput.getCommand().equalsIgnoreCase("find")) {
+            findTask(userInput);
         } else {
-            printOutput("Commands: bye list delete todo deadline event", false);
+            printOutput("Commands: bye list done delete todo deadline event ", false);
         }
     }
 
@@ -194,6 +196,30 @@ public class Ui {
         } catch (Exception e) {
             printOutput("Oops! That didn't work, please check your input and try again!", true);
         }
+    }
+
+    private static void findTask(UserInput userInput) {
+        if (userInput.getNumArgs() < 1) {
+            printOutput("Oops! You didn't provide at least 1 argument!", true);
+            return;
+        }
+        if (taskList.size() == 0) {
+            printOutput("Oops the list is empty!", false);
+            return;
+        }
+        String base = userInput.getArg("");
+        if (base == null || base.equals("")) {
+            printOutput("Oops! Please provide a string to search for!", true);
+            return;
+        }
+        String taskString = "";
+        int count = 1;
+        for (Task t : taskList) {
+            if (t.getDescription().toLowerCase().contains(base.toLowerCase())) {
+                taskString += (count++) + ". " + t.toString() + System.lineSeparator();
+            }
+        }
+        printOutput(taskString, false);
     }
 
     public boolean shouldShutdown() {
