@@ -64,6 +64,26 @@ public class Event extends Task {
                 this.start = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
             }
         }
+        if (dateStr.toLowerCase().contains("end")) {
+            if (dateStr.toLowerCase().matches("end\\s*mon.*")) {
+                this.start = LocalDateTime.now().with(next(DayOfWeek.MONDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*tue.*")) {
+                this.start = LocalDateTime.now().with(next(DayOfWeek.TUESDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*wed.*")) {
+                this.start = LocalDateTime.now().with(next(DayOfWeek.WEDNESDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*thu.*")) {
+                this.start = LocalDateTime.now().with(next(DayOfWeek.THURSDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*fri.*")) {
+                this.start = LocalDateTime.now().with(next(DayOfWeek.FRIDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*sat.*")) {
+                this.start = LocalDateTime.now().with(next(DayOfWeek.SATURDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*sun.*")) {
+                this.start = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
+            }
+            if(this.start !=null){
+                this.start = this.start.withHour(23).withMinute(59).withSecond(59).withNano(0);
+            }
+        }
         if (this.start == null) {
             throw new DukeException();
         }
@@ -81,21 +101,41 @@ public class Event extends Task {
         }
         //Still failed to read date, try grammar interpretation
         LocalDateTime now = LocalDateTime.now();
-        if (dateStr.toLowerCase().contains("next")) {
-            if (dateStr.toLowerCase().matches("next\\s*mon.*")) {
+        if (date2.toLowerCase().contains("next")) {
+            if (date2.toLowerCase().matches("next\\s*mon.*")) {
                 this.end = start.with(next(DayOfWeek.MONDAY));
-            } else if (dateStr.toLowerCase().matches("next\\s*tue.*")) {
+            } else if (date2.toLowerCase().matches("next\\s*tue.*")) {
                 this.end = start.with(next(DayOfWeek.TUESDAY));
-            } else if (dateStr.toLowerCase().matches("next\\s*wed.*")) {
+            } else if (date2.toLowerCase().matches("next\\s*wed.*")) {
                 this.end = start.with(next(DayOfWeek.WEDNESDAY));
-            } else if (dateStr.toLowerCase().matches("next\\s*thu.*")) {
+            } else if (date2.toLowerCase().matches("next\\s*thu.*")) {
                 this.end = start.with(next(DayOfWeek.THURSDAY));
-            } else if (dateStr.toLowerCase().matches("next\\s*fri.*")) {
+            } else if (date2.toLowerCase().matches("next\\s*fri.*")) {
                 this.end = start.with(next(DayOfWeek.FRIDAY));
-            } else if (dateStr.toLowerCase().matches("next\\s*sat.*")) {
+            } else if (date2.toLowerCase().matches("next\\s*sat.*")) {
                 this.end = start.with(next(DayOfWeek.SATURDAY));
-            } else if (dateStr.toLowerCase().matches("next\\s*sun.*")) {
+            } else if (date2.toLowerCase().matches("next\\s*sun.*")) {
                 this.end = start.with(next(DayOfWeek.SUNDAY));
+            }
+        }
+        if (date2.toLowerCase().contains("end")) {
+            if (date2.toLowerCase().matches("end\\s*mon.*")) {
+                this.end = start.with(next(DayOfWeek.MONDAY));
+            } else if (date2.toLowerCase().matches("end\\s*tue.*")) {
+                this.end = start.with(next(DayOfWeek.TUESDAY));
+            } else if (date2.toLowerCase().matches("end\\s*wed.*")) {
+                this.end = start.with(next(DayOfWeek.WEDNESDAY));
+            } else if (date2.toLowerCase().matches("end\\s*thu.*")) {
+                this.end = start.with(next(DayOfWeek.THURSDAY));
+            } else if (date2.toLowerCase().matches("end\\s*fri.*")) {
+                this.end = start.with(next(DayOfWeek.FRIDAY));
+            } else if (date2.toLowerCase().matches("end\\s*sat.*")) {
+                this.end = start.with(next(DayOfWeek.SATURDAY));
+            } else if (date2.toLowerCase().matches("end\\s*sun.*")) {
+                this.end = start.with(next(DayOfWeek.SUNDAY));
+            }
+            if(this.end !=null){
+                this.end = this.end.withHour(23).withMinute(59).withSecond(59).withNano(0);
             }
         }
         if (this.end == null) {

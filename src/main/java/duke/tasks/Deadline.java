@@ -61,6 +61,26 @@ public class Deadline extends Task {
                 this.due = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
             }
         }
+        if (dateStr.toLowerCase().contains("end")) {
+            if (dateStr.toLowerCase().matches("end\\s*mon.*")) {
+                this.due = LocalDateTime.now().with(next(DayOfWeek.MONDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*tue.*")) {
+                this.due = LocalDateTime.now().with(next(DayOfWeek.TUESDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*wed.*")) {
+                this.due = LocalDateTime.now().with(next(DayOfWeek.WEDNESDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*thu.*")) {
+                this.due = LocalDateTime.now().with(next(DayOfWeek.THURSDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*fri.*")) {
+                this.due = LocalDateTime.now().with(next(DayOfWeek.FRIDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*sat.*")) {
+                this.due = LocalDateTime.now().with(next(DayOfWeek.SATURDAY));
+            } else if (dateStr.toLowerCase().matches("end\\s*sun.*")) {
+                this.due = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
+            }
+            if(this.due !=null){
+                this.due = this.due.withHour(23).withMinute(59).withSecond(59).withNano(0);
+            }
+        }
         if (this.due == null) {
             throw new DukeException();
         }
