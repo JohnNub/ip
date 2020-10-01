@@ -11,6 +11,11 @@ public class Parser {
         in = new Scanner(System.in);
     }
 
+    /**
+     * Given a string input, returns a sanitized and pre-processed UserInput object
+     * @param input The string to be processed
+     * @return UserInput object containing the command and all arguments
+     */
     public UserInput parse(String input) {
         String userInput;
 
@@ -43,7 +48,7 @@ public class Parser {
                 String tmp = output[i].trim();
                 String key;
                 String val;
-                if(tmp.indexOf(' ')!=-1) {
+                if (tmp.indexOf(' ') != -1) {
                     val = tmp.substring(tmp.indexOf(' ') + 1);
                     key = tmp.substring(0, tmp.indexOf(' '));
                 } else {

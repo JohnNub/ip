@@ -19,6 +19,10 @@ public class Ui {
             + "| |_| | |_| |   <  __/\n"
             + "|____/ \\__,_|_|\\_\\___|\n";
 
+    /**
+     * Initializes a new UI and prints greeting message
+     * @param taskList The Task List if any saved data was found
+     */
     public Ui(ArrayList<Task> taskList) {
         this.taskList = taskList;
         in = new Scanner(System.in);
@@ -28,6 +32,9 @@ public class Ui {
                 "What can I do for you?", true);
     }
 
+    /**
+     * UI Execution routine. Fetches command from scanner, calls parser and sends the command to the correct function
+     */
     public void run() {
         String inStr = in.nextLine();
         UserInput userInput = parser.parse(inStr);
@@ -177,6 +184,10 @@ public class Ui {
         }
     }
 
+    /**
+     * Deletes the tasks by index. Requires key ""
+     * @param userInput UserInput object for command processing
+     */
     private static void deleteTask(UserInput userInput) {
         if (userInput.getNumArgs() < 1) {
             printOutput("Oops! You didn't provide at least 1 argument!", true);
@@ -198,6 +209,10 @@ public class Ui {
         }
     }
 
+    /**
+     * Finds the task specified by the user. Requires key ""
+     * @param userInput UserInput object for command processing
+     */
     private static void findTask(UserInput userInput) {
         if (userInput.getNumArgs() < 1) {
             printOutput("Oops! You didn't provide at least 1 argument!", true);
@@ -222,10 +237,18 @@ public class Ui {
         printOutput(taskString, false);
     }
 
+    /**
+     * Returns if the loop should exit
+     * @return true if the program should terminate
+     */
     public boolean shouldShutdown() {
         return shutdown;
     }
 
+    /**
+     * Utility function for printing errors triggered by other classes
+     * @param text The string to be printed
+     */
     public void printError(String text) {
         printOutput(text, true);
     }

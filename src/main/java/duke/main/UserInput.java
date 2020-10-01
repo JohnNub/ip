@@ -27,11 +27,11 @@ public class UserInput {
         this.args = args;
     }
 
-    public String getArg(String s){
+    public String getArg(String s) {
         return args.get(s);
     }
 
-    public int getNumArgs(){
+    public int getNumArgs() {
         return args.size();
     }
 }
