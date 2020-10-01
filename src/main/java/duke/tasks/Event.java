@@ -30,8 +30,10 @@ public class Event extends Task {
 
     /**
      * Attempts to convert the user supplied date string to a machine date
-     * TODO implement end time
+     * Both dates are required as we have to parse relative dates sequentially and also check if range is valid
      * @param dateStr The string to be converted
+     * @param date2 The end date to be converted
+     * @throws DukeException if there was an error with the date parsing or the date overlap is incorrect
      */
     private void tryReadDate(String dateStr, String date2) throws DukeException {
         LocalDateTime result = null;
@@ -80,7 +82,7 @@ public class Event extends Task {
             } else if (dateStr.toLowerCase().matches("end\\s*sun.*")) {
                 this.start = LocalDateTime.now().with(next(DayOfWeek.SUNDAY));
             }
-            if(this.start !=null){
+            if (this.start != null) {
                 this.start = this.start.withHour(23).withMinute(59).withSecond(59).withNano(0);
             }
         }
@@ -134,14 +136,14 @@ public class Event extends Task {
             } else if (date2.toLowerCase().matches("end\\s*sun.*")) {
                 this.end = start.with(next(DayOfWeek.SUNDAY));
             }
-            if(this.end !=null){
+            if (this.end != null) {
                 this.end = this.end.withHour(23).withMinute(59).withSecond(59).withNano(0);
             }
         }
         if (this.end == null) {
             throw new DukeException();
         }
-        if(this.end.toEpochSecond(ZoneOffset.UTC)<this.start.toEpochSecond(ZoneOffset.UTC)){
+        if (this.end.toEpochSecond(ZoneOffset.UTC) < this.start.toEpochSecond(ZoneOffset.UTC)) {
             // An event cannot end before it starts
             throw new DukeException();
         }

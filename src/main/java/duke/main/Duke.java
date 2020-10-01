@@ -32,13 +32,21 @@ public class Duke {
         ui.printError(outcome);
         while (!ui.shouldShutdown()) {
             ui.run();
-            writeToFile(s,taskList);
+            String writeResult = writeToFile(s, taskList);
+            if (!writeResult.equals("")) {
+                ui.printError(writeResult);
+            }
         }
         ui.printError("Bye. Hope to see you again soon!");
     }
 
 
-
+    /**
+     * Routine for writing to file using the Storage object and handling exceptions
+     * @param s Storage object to do the writing
+     * @param taskList Task list to be written
+     * @return The output message depending on the result
+     */
     private static String writeToFile(Storage s, ArrayList<Task> taskList) {
         try {
             s.save(taskList);
