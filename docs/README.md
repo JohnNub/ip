@@ -33,3 +33,18 @@ Expected outcome:
   Added new todo: [T][✘] My Todo
 ____________________________________________________________```
 
+
+### `deadline` - Create deadline
+
+Adds a new deadline to the list with the specified date and time
+
+Example of usage: 
+
+`deadline my deadline /by next friday`
+
+Expected outcome:
+
+```____________________________________________________________
+  Added new todo: [D][✘] my deadline
+	Due by: 2020-09-10T13:36:29.396448400
+____________________________________________________________```
